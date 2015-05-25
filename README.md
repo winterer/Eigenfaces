@@ -111,7 +111,7 @@ The two data sets `xtrain` and `xtest` must be _n x (h x w + 1)_ matrices, where
 
 ````matlab
 I_flat = eigenfaces_flatten(I); % flatten images
-data = [I_flat C);              % append class column
+data = [I_flat C');              % append class column
 ````
 
 Using this test data, it is now easy to perform a 10-fold cross-validation by calling `crossval`:
