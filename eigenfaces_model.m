@@ -13,8 +13,7 @@ addRequired(p, 'I'); % TODO: add verification function
 addOptional(p, 'C', []); % TODO: add verification function
 addParameter(p, 'EigenfacesLimit', false);
 addParameter(p, 'Optimize', true);
-addParameter(p, 'ShowEigenfaces', false);
-addParameter(p, 'ShowWeights', false);
+addParameter(p, 'Show', { 'Eigenfaces', false, 'Weights', false });
 addParameter(p, 'Variance', 0.95);
 
 parse(p, I, C, varargin{:});
@@ -32,6 +31,7 @@ if ndims(I) == 3
 elseif ismatrix(I)
     % matrix structure: d*n (linear image data)
     [d,n] = size(I);
+    h = 1; w = d; % we don't know the size
     % we don't know height and width, so we can't display eigenfaces
     if p.Results.ShowEigenfaces
         error('Cannot display eigenfaces for flat image data.');
@@ -97,8 +97,7 @@ V = fliplr(V);
 if p.Results.EigenfacesLimit
     M = p.Results.EigenfacesLimit;
     if strcmpi(M, 'auto')
-        M = computeNumberOfComponents(eigval, p.Results.Variance);
-        fprintf('Computed number of eigenvectors: %d\n', M);
+        M = computeNumberOfComponents(p.Results.Variance);
     end
     if length(M) > 1
         % use M as list to define which elements to choose
@@ -115,52 +114,27 @@ end
 %% compute weights of input faces
 W = (V' * T)'; % transform W to have one weight-vector per row
 
-if p.Results.ShowWeights
-    %% show 1st through 16th weights
-    %tic
-    figure('name', 'Weights of input images')
-    colormap gray
-    for i = 1:16
-        subplot(4,4,i)
-        stem(W(i,:))
-        title(sprintf('image #%d', i))
-    end
-    %toc
-end
-
-if p.Results.ShowEigenfaces
-    %% show 0th through 15th principal eigenvectors
-    %tic
-    eig0 = reshape(mean_img, [h,w]);
-    figure('name','Eigenfaces'),subplot(4,4,1)
-    imagesc(eig0)
-    title('mean');
-    colormap gray
-    for i = 1:15
-        subplot(4,4,i+1)
-        imagesc(reshape(V(:,i),h,w))
-        title(sprintf('face #%d', i))
-    end
-    %toc
-end
-
 efm = struct('meanface', mean_img, ...
-             'eigenfaces', V, ...
-             'eigenvalues', eigval, ...
-             'weights', W, ...
-             'class', p.Results.C);
-end
+    'eigenfaces', V, ...
+    'eigenvalues', eigval, ...
+    'weights', W, ...
+    'class', p.Results.C, ...
+    'imagesize', [h, w]);
 
-function [ k ] = computeNumberOfComponents( eigv, var )
-% evaluate the number of principal components needed to represent var % total variance.
-eigsum = sum(eigv);
-csum = 0;
-for i = 1:length(eigv)
-    csum = csum + eigv(i);
-    tv = csum / eigsum;
-    if tv > var
-        k = i;
-        break
+eigenfaces_show(efm, p.Results.Show{:});
+%showFigures();
+
+    function [ k ] = computeNumberOfComponents( var )
+        % evaluate the number of principal components needed to represent var % total variance.
+        eigsum = sum(eigval);
+        csum = 0;
+        for c_i = 1:length(eigval)
+            csum = csum + eigval(c_i);
+            tv = csum / eigsum;
+            if tv > var
+                k = c_i;
+                break
+            end
+        end
     end
-end
 end
