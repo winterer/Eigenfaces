@@ -42,7 +42,7 @@ end
 
 % vectorize images
 x = reshape(I,[d n]);
-x = double(x)';
+x = im2double(x)';
 
 % compute mean image
 mean_img = mean(x);

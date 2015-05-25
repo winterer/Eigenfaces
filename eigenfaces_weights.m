@@ -9,7 +9,7 @@ function [ weights ] = eigenfaces_weights( efm, image )
     % M ... mean face
     
     % convert input image to vector
-    img = double(reshape(image, numel(image), 1));
+    img = im2double(reshape(image, numel(image), 1));
     
     % compute diff image
     diff = img - efm.meanface';
