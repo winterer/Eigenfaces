@@ -1,13 +1,26 @@
+%% init variables
+path = './att_faces';
+ext  = '*.pgm';
+imageToClassify = './att_faces/s1/1.pgm';
+
 %% load images
-[I, C] = eigenfaces_load('./att_faces', '*.pgm');
+[I, C] = eigenfaces_load(path, ext);
 
 %% train eigenfaces model
-efm = eigenfaces_model(I, C, 'EigenfacesLimit', 1:50, 'ShowEigenfaces', true, 'ShowWeights', true);
+%efm = eigenfaces_model(I, C, 'EigenfacesLimit', 'auto', 'ShowEigenfaces', 1:8, 'ShowWeights', 1:9);
+efm = eigenfaces_model(I, C, 'EigenfacesLimit', 'auto', 'Show', { 'Eigenfaces', true, 'Weights', 1:9});
 disp(efm);
 
+%% show figures
+% mean + first 24 eigenfaces
+eigenfaces_show(efm, 'Eigenfaces', 1:24);
+
+% weights of the first 16 input faces
+eigenfaces_show(efm, 'Weights', 1:16);
+
 %% classify new image
-image = imread('./1.pgm');
-[faceId, dist, idx] = eigenfaces_classify(efm, image);
+image = imread(imageToClassify);
+[faceId, dist, idx] = eigenfaces_classify(efm, image, 'ShowDistances', true, 'ShowWeights', true);
 fprintf('best match: image #%d; face #%d (distance: %f)\n', idx, faceId, dist);
 
 %% perform manual classification using knnsearch
