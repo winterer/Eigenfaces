@@ -49,6 +49,8 @@ class5 = C(5)
 
 This results can be used directly for training the eigenface model using [`eigenface_model(I, C)`](eigenfaces_model.m).
 
+#### Alternative data format
+
 The function [`eigenfaces_flatten(I)`](eigenfaces_flatten.m) rearranges the image matrix into a matrix of size _n x (h*w)_ as follows:
 
 * Every row contains one observation (= image)
@@ -101,6 +103,27 @@ fprintf('best match: image #%d; face #%d (distance: %f)\n', idx, faceId, dist);
   best match: image #68 face #33 (distance: 834.564822)
 ````
 
+### Verification
+
+The function [`eigenfaces_test(xtrain, xtest)`](eigenfaces_test.m) is thought for being used by different validation algorithms like `crossval`. If uses the given training data set `xtrain` to train a Eigenface model (using `eigenface_model`) and then tries to classify the given test set `xtest`, returning the classification rate (number of correctly classified samples / total number of samples).
+
+The two data sets `xtrain` and `xtest` must be _n x (h x w + 1)_ matrices, where every row contains the image data of an observation and the classification (= face id) of that image in the last column. This structure can easily be established by using the alternate date format ([`eigenfaces_flatten(I)`](eigenfaces_flatten.m)):
+
+````matlab
+I_flat = eigenfaces_flatten(I); % flatten images
+data = [I_flat C);              % append class column
+````
+
+Using this test data, it is now easy to perform a 10-fold cross-validation by calling `crossval`:
+
+````matlab
+result = crossval(@eigenfaces_test, data);
+disp(mean(result));
+````
+
 ## Limitations
 
-At the moment, images must be grayscale.
+* All images must be grayscale.
+* All images must have equal size.
+* All images are loaded into memory at once, so this toolbox may not be suitable for large data sets.
+
