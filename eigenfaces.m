@@ -24,7 +24,7 @@ image = imread(imageToClassify);
 fprintf('best match: image #%d; face #%d (distance: %f)\n', idx, faceId, dist);
 
 %% perform manual classification using knnsearch
-image = imread('./1.pgm');
+image = imread(imageToClassify);
 weights = eigenfaces_weights(efm, image);
 [idx, dist] = knnsearch(efm.weights, weights);
 faceId = efm.class(idx);
@@ -46,7 +46,7 @@ eigenfaces_test(data, datasample(data, 10), 'ModelParams', {'EigenfacesLimit', '
 %% test 10 random samples against 200 random training samples
 eigenfaces_test(datasample(data, 200), datasample(data, 10))
 
-%% use 75% random samples for training; test with the rest
+%% use 70% random samples for training; test with the rest
 f = 0.70; % 70% of the data used for training
 n = size(data, 1);
 idx = randperm(n);
@@ -65,3 +65,12 @@ mean(result)
 %% perform a 10-fold cross validation using kNN (k=3)
 result = crossval(@(x,y) eigenfaces_test(x,y, 'ClassifyParams', { 'K', 3 } ), data);
 mean(result)
+
+%% perform 10-fold cross validations for all models with number of eigenvectors between 1 and 50
+result = zeros(50, 10);
+for i = 1:50
+    fprintf('10-fold cross validation using %d eigenfaces, starting with %d:\n', 50, i);
+    result(i,:) = crossval(@(x,y) eigenfaces_test(x,y, 'ModelParams', { 'EigenfacesLimit', 1:50 } ), data);
+    fprintf('mean classifcation rate: %f\n', mean(result(i,:)));
+end
+disp('done');
