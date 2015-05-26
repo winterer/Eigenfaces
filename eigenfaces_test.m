@@ -40,13 +40,14 @@ for i = 1:tests
     [ face, dist, nn ] = eigenfaces_classify( efm, test_img(i,:), p.Results.ClassifyParams{:} );
     best_face = mode(face);
     if (best_face == test_class(i))
-        fprintf('success (face %d)\n', face);
+        %fprintf('success (face %d)\n', face);
         hits = hits + 1;
     else
-        fprintf('failed (classified: %d, correct: %d)\n', best_face, test_class(i));
+        %fprintf('failed (classified: %d, correct: %d)\n', best_face, test_class(i));
     end
 end
 
 value = hits / tests;
+fprintf('classification rate: %f\n', value);
 end
 
