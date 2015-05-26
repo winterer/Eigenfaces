@@ -32,10 +32,6 @@ elseif ismatrix(I)
     % matrix structure: d*n (linear image data)
     [d,n] = size(I);
     h = 1; w = d; % we don't know the size
-    % we don't know height and width, so we can't display eigenfaces
-    if p.Results.ShowEigenfaces
-        error('Cannot display eigenfaces for flat image data.');
-    end
 else
     error('Unsupported number of dimensions of input image matrix: %d', ndims(I));
 end
@@ -128,6 +124,7 @@ eigenfaces_show(efm, p.Results.Show{:});
         % evaluate the number of principal components needed to represent var % total variance.
         eigsum = sum(eigval);
         csum = 0;
+        k = length(eigval);
         for c_i = 1:length(eigval)
             csum = csum + eigval(c_i);
             tv = csum / eigsum;
