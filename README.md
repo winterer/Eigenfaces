@@ -103,7 +103,7 @@ fprintf('best match: image #%d; face #%d (distance: %f)\n', idx, faceId, dist);
   best match: image #68 face #33 (distance: 834.564822)
 ````
 
-### Verification
+### Validation
 
 The function [`eigenfaces_test(xtrain, xtest)`](eigenfaces_test.m) is thought for being used by different validation algorithms like `crossval`. If uses the given training data set `xtrain` to train a Eigenface model (using `eigenface_model`) and then tries to classify the given test set `xtest`, returning the classification rate (number of correctly classified samples / total number of samples).
 
