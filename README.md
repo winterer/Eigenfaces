@@ -105,7 +105,7 @@ fprintf('best match: image #%d; face #%d (distance: %f)\n', idx, faceId, dist);
 
 ### Validation
 
-The function [`eigenfaces_test(xtrain, xtest)`](eigenfaces_test.m) is thought for being used by different validation algorithms like `crossval`. If uses the given training data set `xtrain` to train a Eigenface model (using `eigenface_model`) and then tries to classify the given test set `xtest`, returning the classification rate (number of correctly classified samples / total number of samples).
+The function [`eigenfaces_test(xtrain, xtest)`](eigenfaces_test.m) is thought for being used by different validation algorithms like `crossval`. It uses the given training data set `xtrain` to train an Eigenface model (using `eigenface_model`) and then tries to classify the given test set `xtest`, returning the classification rate (number of correctly classified samples / total number of samples).
 
 The two data sets `xtrain` and `xtest` must be _n x (h x w + 1)_ matrices, where every row contains the image data of an observation and the classification (= face id) of that image in the last column. This structure can easily be established by using the alternative date format ([`eigenfaces_flatten(I)`](eigenfaces_flatten.m)):
 
@@ -120,6 +120,20 @@ Using this test data, it is now easy to perform a 10-fold cross-validation by ca
 result = crossval(@eigenfaces_test, data);
 disp(mean(result));
 ````
+
+### Visualization
+
+For visualization, some functions accept optional parameters:
+
+````matlab
+%% create model and display Eigenfaces and weights
+efm = eigenfaces_model(I, C, 'Show', { 'Eigenfaces', true, 'Weights', true});
+
+%% classify image and show distances to all training faces and weights of input image
+[face, dist, idx] = eigenfaces_classify(efm, image, 'ShowDistances', true, 'ShowWeights', true);
+````
+
+See the two [examples](examples) for more info.
 
 ## Limitations
 
