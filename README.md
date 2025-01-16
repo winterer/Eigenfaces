@@ -4,7 +4,7 @@ MATLAB Eigenfaces Toolbox
 This MATLAB Toolbox implements the 'Eigenface' algorithm for feature extraction and classification of faces.
 For details see http://en.wikipedia.org/wiki/Eigenface.
 
-This MATLAB scripts are the results of a project for the lecture course 'Data Fusion in Sensor Systems' of the study program 'Human-Centered Computing' at the University of Applied Sciences Upper Austria (http://www-en.fh-ooe.at).
+This MATLAB scripts are the results of a project for the lecture course 'Data Fusion in Sensor Systems' of the master degree program [Human-Centered Computing](https://fh-ooe.at/en/degree-programs/human-centered-computing-master) at the [University of Applied Sciences Upper Austria](https://fh-ooe.at/en).
 
 Project members: Christoph Absenger, Christian Salomon, Mario Winterer.
 
@@ -107,7 +107,7 @@ fprintf('best match: image #%d; face #%d (distance: %f)\n', idx, faceId, dist);
 
 The function [`eigenfaces_test(xtrain, xtest)`](eigenfaces_test.m) is thought for being used by different validation algorithms like `crossval`. It uses the given training data set `xtrain` to train an Eigenface model (using `eigenface_model`) and then tries to classify the given test set `xtest`, returning the classification rate (number of correctly classified samples / total number of samples).
 
-The two data sets `xtrain` and `xtest` must be _n x (h x w + 1)_ matrices, where every row contains the image data of an observation and the classification (= face id) of that image in the last column. This structure can easily be established by using the alternative date format ([`eigenfaces_flatten(I)`](eigenfaces_flatten.m)):
+The two data sets `xtrain` and `xtest` must be _n x (h x w + 1)_ matrices, where every row contains the image data of an observation and the classification (= face id) of that image in the last column. This structure can easily be established by using the alternative data format ([`eigenfaces_flatten(I)`](eigenfaces_flatten.m)):
 
 ````matlab
 I_flat = eigenfaces_flatten(I); % flatten images
